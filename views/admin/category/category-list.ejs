@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <%- include('../../partials/head.ejs') %>
+  </head>
+  <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <%- include('../../partials/navbar.ejs') %>
+    <h1 class="w-full flex justify-center items center mb-16 font-semibold text-3xl">Admin Kategoriler</h1>
+    <% if(action) { %>
+    <div
+      id="success"
+      class="w-4/12 mx-auto rounded text-lg text-center font-semibold px-4 py-5 <%= action == 'error' ? 'text-red-800 bg-red-500/40' : 'text-green-800 bg-green-500/40' %>"
+    >
+      <% if(action == 'delete') { %>
+      <p>Kategori başarıyla silindi.</p>
+      <% } else if(action == 'edit') { %>
+      <p>Kategori başarıyla güncellendi.</p>
+      <% } else if(action == 'create') { %>
+      <p>Kategori başarıyla oluşturuldu.</p>
+      <% } else if(action == 'error'){ %>
+      <p>kategoriye ait blog kaydı olduğu için silme işlemi gerçekleştirilemedi.</p>
+      <% } %>
+    </div>
+    <% } %>
+    <main class="w-9/12 mx-auto flex justify-between gap-5 mt-5 text-white">
+      <table class="mx-auto">
+        <thead>
+          <tr class="uppercase text-lg text-gray-700 font-bold">
+            <th class="min-w-[60px]">ıd</th>
+            <th class="min-w-[180px]">name</th>
+            <th class="min-w-[175px]"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% categories.forEach((category) => { %>
+          <tr class="border-b border-gray-200 odd:bg-gray-100/30 rounded">
+            <td class="py-4 px-4">#<%= category.id %></td>
+            <td class="py-4 px-4"><%= category.name %></td>
+            <td class="py-4 px-4 flex justify-end">
+              <a
+                href="/admin/categories/<%= category.id %>"
+                class="rounded bg-yellow-500 text-white px-3 py-2 font-semibold hover:bg-yellow-700 transition-all mr-3"
+                >Edit</a
+              >
+              <a
+                href="/admin/category/delete/<%= category.id %>"
+                id="btnDelete"
+                class="rounded bg-red-500 text-white px-3 py-2 font-semibold hover:bg-red-700 transition-all"
+                >Delete</a
+              >
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

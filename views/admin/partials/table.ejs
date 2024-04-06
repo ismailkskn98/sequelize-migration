@@ -1,0 +1,42 @@
+<table class="mx-auto">
+        <thead>
+          <tr class="uppercase text-lg text-gray-700 font-bold grid grid-cols-[60px_180px_1fr_180px_175px]">
+            <th class="w-[60px]">ıd</th>
+            <th class="w-[180px]">resim</th>
+            <th>baslik</th>
+            <th class="w-[180px]">Kategori</th>
+            <th class="w-[175px]"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% blogs.forEach(({dataValues}) => { %>
+          <tr class="border-b border-gray-200 odd:bg-gray-100/30 rounded grid grid-cols-[60px_180px_1fr_180px_175px]">
+            <td class="py-3 px-4 w-[60px] flex items-center">#<%= dataValues.id %></td>
+            <td class="py-3 px-4 w-[180px] flex items-center">
+              <img src="/static/images/<%= dataValues.image %>" alt="<%= dataValues.title %>" class="w-[168px] h-[94px] object-cover" />
+            </td>
+            <td class="py-3 px-4 flex items-center"><%= dataValues.title %></td>
+            <td class="py-3 px-4 w-[180px] flex flex-col items-center justify-center">
+            <% dataValues.categories.forEach((category) => { %>
+              <p>
+                <%= category.name %>
+              </p>
+            <% }) %>
+            </td>
+            <td class="py-3 px-4 w-[175px] flex items-center">
+              <a
+                href="/admin/blogs/<%= dataValues.id %>"
+                class="rounded bg-yellow-500 text-white px-3 py-2 font-semibold hover:bg-yellow-700 transition-all mr-3"
+                >Edit</a
+              >
+              <a
+                href="/admin/blog/delete/<%= dataValues.id %>"
+                id="btnDelete"
+                class="rounded bg-red-500 text-white px-3 py-2 font-semibold hover:bg-red-700 transition-all"
+                >Delete</a
+              >
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>

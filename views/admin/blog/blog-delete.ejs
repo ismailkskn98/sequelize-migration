@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <%- include('../../partials/head.ejs') %>
+  </head>
+  <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <%- include('../../partials/navbar.ejs') %>
+    <main class="w-9/12 mx-auto flex justify-between gap-5 mt-5">
+      <!-- Modal -->
+      <div
+        id="modal"
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-2xl border-4 border-gray-200 rounded bg-white text-gray-700 px-9 py-8 flex flex-col items-center gap-6"
+      >
+        <div class="flex flex-col items-center gap-3">
+          <p class="font-semibold text-lg"><%= blog.title %></p>
+          <p class="text-lg">İsimli blog kaydını silmek istiyor musunuz?</p>
+        </div>
+        <form method="post" class="w-full flex items-center justify-evenly">
+          <input type="hidden" name="id" value="<%= blog.id %>" />
+          <button type="submit" class="rounded bg-red-500 text-white px-3 py-2 font-semibold hover:bg-red-700 transition-all">
+            Delete
+          </button>
+          <a href="/admin/blogs" class="rounded bg-sky-600 text-white px-3 py-2 font-semibold hover:bg-sky-900 transition-all">
+            Vazgeç
+          </a>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

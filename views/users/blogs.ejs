@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <%- include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%- include('../partials/navbar.ejs') %>
+    <main class="w-9/12 mx-auto flex justify-between gap-5">
+      <section class="w-1/5">
+        <aside class="flex flex-col items-center border-b-l border-b-r rounded">
+          <%- include('./partials/aside.ejs', {categories, id}) %>
+        </aside>
+      </section>
+      <section class="w-4/5 flex flex-col items-center gap-5 mb-32">
+        <h1 class="text-3xl font-semibold mb-3"><%= title %></h1>
+        <% if(blogs.length == 0) { %> <%- include('./partials/no-products.ejs') %> <% } %> <% blogs.forEach((blog) => { %> <%-
+        include('./partials/article.ejs', blog) %> <% }); %>
+        <!-- Pagination -->
+        <%- include('./partials/pagination.ejs') %>
+      </section>
+    </main>
+  </body>
+</html>

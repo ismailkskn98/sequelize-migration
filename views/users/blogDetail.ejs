@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <%- include('../partials/head.ejs') %>
+  </head>
+  <body>
+    <%- include('../partials/navbar.ejs') %>
+    <main class="w-9/12 mx-auto">
+      <h1 class="text-3xl font-semibold mb-10">Blog Detail - <%= blog.title %></h1>
+      <%- include('./partials/article.ejs', blog) %>
+      <p class="mt-10"><%- blog.description %></p>
+    </main>
+  </body>
+</html>

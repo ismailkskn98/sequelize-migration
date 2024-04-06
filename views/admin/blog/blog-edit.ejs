@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <%- include('../../partials/head.ejs') %>
+  </head>
+  <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <%- include('../../partials/navbar.ejs') %>
+    <h1 class="w-full flex justify-center items center mb-10 font-semibold text-3xl">Blog Ekle</h1>
+
+      <main class="w-9/12 mx-auto flex justify-between gap-5 mb-32">
+      <form method="post" class="w-full mx-auto p-3 flex justify-between gap-3"
+      enctype="multipart/form-data"
+      >
+        <input type="hidden" name="id" value="<%= blog.id %>">
+        <input type="hidden" name="image" value="<%= blog.image %>">
+        <section class="px-5 grow flex flex-col gap-8">
+          <!-- title => input -->
+          <article class="flex items-center gap-5">
+            <label for="title" class="w-[120px] text-lg text-white font-semibold">Baslik</label>
+            <div class="w-full">
+              <input type="text" id="title" name="title" value="<%= blog.title %>" class="border border-gray-300 w-full rounded py-2 px-3 outline-none bg-gray-100/20 text-white" />
+            </div>
+          </article>
+          <article class="flex items-center gap-5">
+            <label for="url" class="w-[120px] text-lg text-white font-semibold">Url</label>
+            <div class="w-full">
+              <input type="text" disabled id="url" name="url" value="<%= blog.url %>" class="border border-gray-300 w-full rounded py-2 px-3 outline-none bg-gray-300/50 text-gray-500" />
+            </div>
+          </article>
+          <!-- subTitle => input -->
+          <article class="flex items-center gap-5">
+            <label for="subTitle" class="w-[120px] text-lg text-white font-semibold">Alt Baslik</label>
+            <div class="w-full">
+              <textarea name="subTitle" id="subTitle" rows="3" class="resize-none border border-gray-300 w-full rounded px-4 outline-none py-3 bg-gray-100/20 text-white"><%= blog.subTitle %></textarea>
+            </div>
+          </article>
+          <!-- description => textarae - editör -->
+          <article class="flex items-center gap-5">
+            <label for="description" class="w-[120px] text-lg text-white font-semibold">Açıklama</label>
+            <div class="w-full">
+              <textarea name="description" id="editor" rows="10" class="resize-none border border-gray-300 w-full rounded px-4 outline-none py-3 bg-gray-100/20 text-white"><%= blog.description %></textarea>
+            </div>
+          </article>
+          <!-- image -->
+          <article class="flex items-center gap-5">
+            <label for="image" class="w-[120px] text-lg text-white font-semibold">Resim</label>
+            <div class="w-full flex items-center gap-2">
+              <img src="/static/images/<%= blog.image %>" alt="<%= blog.title %>" class="w-[200px] h-[120px] object-cover rounded">
+              <input type="file" id="image" name="image" class="max-w-[300px] border border-gray-300 cursor-pointer rounded py-2 px-3 outline-none bg-gray-100/20 text-white" />
+            </div>
+          </article>
+          <!-- submit => button -->
+          <article class="flex items-center justify-center gap-5 mt-5">
+              <button type="submit" class="rounded cursor-pointer px-8 py-3 font-semibold bg-gray-800 text-white">Kaydet</button>
+            </div>
+          </article>
+        </section>
+        <section class="min-w-[150px] flex flex-col items-start">
+          <!-- isActive & isHome => checkbox -->
+            <article class="flex flex-col gap-1 pb-4">
+              <div class="flex items-center gap-3">
+                <input type="checkbox" name="isActive" id="isActive" class="w-4 h-4 outline-none" <%= blog.isActive == '1' ? 'checked' : '' %> />
+                <label for="isActive" class="text-white">Onay</label>
+              </div>
+              <div class="flex items-center gap-3">
+                <input type="checkbox" name="isHome" id="isHome" class="w-4 h-4 outline-none" <%= blog.isHome == '1' ? 'checked' : '' %> />
+                <label for="isHome" class="text-white">Anasayfa</label>
+              </div>
+            </article>
+           <!-- categories -->
+            <article class="flex flex-col gap-1 border-t border-gray-100/50 pt-4">
+              <% categories.forEach((category) => { %>
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" name="categories[]" value="<%= category.id %>" id="category_<%= category.id %>" class="w-4 h-4 outline-none" <%= blog.Categories.some((dataValues) => dataValues.id == category.id) ? 'checked' : '' %> />
+                  <label for="category_<%= category.id %>" class="text-white"><%= category.name %></label>
+                </div>
+              <% }) %>
+          </article>
+        </section>
+      </form>
+    </main>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+    <script>
+      ClassicEditor
+      .create(document.querySelector('#editor'))
+      .catch(err => {
+        console.log(err);
+      })
+    </script>
+  </body>
+</html>

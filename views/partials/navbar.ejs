@@ -1,0 +1,24 @@
+<header class="w-full py-6 bg-gray-800 text-white mb-10">
+  <div class="flex items-center justify-between w-9/12 mx-auto">
+    <a href="/"><span class="text-4xl font-bold">BlogApp</span></a>
+    <nav class="flex items-center gap-8 text-lg text-white">
+      <a href="/">Anasayfa</a>
+      <a href="/blogs">Blogs Listesi</a>
+      <% if (isAuth) { %>       
+        <a href="/admin/blogs">Admin Blog</a>
+        <a href="/admin/blog/create">Add Blog</a>
+        <a href="/admin/categories">Admin Categories</a>
+        <a href="/admin/category/create">Add Category</a>
+      <% } %>
+        <div>
+          <% if (isAuth) { %>     
+            <a href="account/logout" class="underline">Logout</a>
+            <span></span>
+          <% } else { %>
+            <a href="/account/login" class="underline">Login</a> / 
+            <a href="/account/register" class="underline">Register</a>
+            <% } %>
+        </div>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,6 @@
+<span class="block w-full border py-3 pl-7 bg-gray-200 text-black font-semibold text-lg">Tüm Kategoriler</span>
+<% categories.forEach((category) => { %>
+<a href="/blogs/category/<%= category.url %>" class="block w-full border py-2 pl-7 hover:bg-gray-800 hover:text-white transition-all <% if(category.id == id) { %> <%- "bg-gray-800 text-white" %> <% } %>"
+  ><%= category.name %></a
+>
+<% }) %>

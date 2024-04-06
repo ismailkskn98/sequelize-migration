@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <%- include('../../partials/head.ejs') %>
+  </head>
+  <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <%- include('../../partials/navbar.ejs') %>
+    <h1 class="w-full flex justify-center items center mb-10 font-semibold text-3xl">Kategori Ekle</h1>
+    <main class="w-9/12 mx-auto flex justify-between gap-5">
+      <form method="post" class="w-7/12 mx-auto px-5 py-4 flex flex-col gap-8">
+        <!-- name => input -->
+        <section class="flex items-center gap-3">
+          <label for="name" class="basis-1/4 text-lg text-white font-semibold">İsim</label>
+          <div class="basis-3/4">
+            <input type="text" id="name" name="name" class="border border-gray-300 w-full rounded py-2 px-3 outline-none bg-gray-100/20 text-white" />
+          </div>
+        </section>
+        <!-- submit => button -->
+        <section class="flex items-center justify-center gap-3 mt-5">
+            <button type="submit" class="rounded cursor-pointer px-8 py-3 font-semibold bg-gray-800 text-white">Kaydet</button>
+          </div>
+        </section>
+      </form>
+    </main>
+  </body>
+</html>
