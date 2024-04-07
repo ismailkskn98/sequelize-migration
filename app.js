@@ -16,6 +16,7 @@ const authRoutes = require('./routes/auth');
 
 // custom models
 const db = require('./models');
+const locals = require('./middlewares/locals');
 
 // template engine
 app.set('view engine', 'ejs');
@@ -40,6 +41,7 @@ app.use(
     }),
   })
 )
+app.use(locals);
 // router middlewares
 app.use('/account', authRoutes);
 app.use('/admin', adminRoutes); // bu şekilde öneki koyabiliriz.

@@ -10,17 +10,7 @@
             <input type="text" name="username" id="username" class="border py-2 rounded px-3 outline-none text-sm text-gray-500 w-full" placeholder="Kullanıcı Adı" required>
             <input type="password" name="password" id="password" class="border py-2 rounded px-3 outline-none text-sm text-gray-500 w-full" placeholder="Şifre" required>
             <button type="submit" class="border px-8 py-2 rounded font-semibold hover:bg-white transition-all">Giriş Yap</button>
-            <% if (action) { %>
-                <% if (action == 'success') { %>
-                    <div class="absolute -top-[60px] left-0 w-full rounded text-lg text-center font-semibold px-3 py-4 text-green-800 bg-green-500/40">
-                        <p>Kayıt işlemi başarılı.</p>
-                    </div>
-                <% } else if(action == 'error') { %>
-                    <div class="absolute -top-[60px] left-0 w-full rounded text-lg text-center font-semibold px-3 py-4 text-red-800 bg-red-500/40">
-                        <p>Hatalı Giriş.</p>
-                    </div>
-               <% } %>
-           <% } %>
+            <%- include('./partials/message.ejs') %>
         </form>
     </main>
 </body>
