@@ -53,9 +53,10 @@ exports.postLogin = async (req, res) => {
         if(match) {
             // login
             // cookie en ilkeli ve güvenlik sorunu var fakat başka amaçlar için kullanıyoruz.
-            res.cookie('isAuth', true);
-            // session bilgisi
-            // session - db tutma
+            //? res.cookie('isAuth', true);
+            // session bilgisi => güvenlik sorunu var oluşturulan ID başka bir bilgisayarda kullanıldığında uygulama o ID'yi tanıdığı için o bilgisayara yine izin vericek bu da güvenlik açığı oluşturuyor. Buna cross attack deniyor
+            req.session.isAuth = true;
+            // session - db tutma => normal de session server ram'inde yani geçici belleğinde tutuluyor. çok fazla istek olduğunda performans kaybı veya sunucu yeniden başlatıldığında bu verilerin kaybolmasına neden olur. En sağlıklısı database'de bunları tutmak.
             // token-based auth kavramı - api bölümü
             return res.redirect('/');
         }
@@ -67,7 +68,8 @@ exports.postLogin = async (req, res) => {
 }
 exports.getLogout = async (req, res) => {
     try {
-        res.clearCookie('isAuth');
+        // res.clearCookie('isAuth');
+        await req.session.destroy(); // tüm session'ları temizler
         res.redirect('/account/login');
     } catch (error) {
         console.log(error);
