@@ -4,6 +4,7 @@ const port = 8080;
 
 // modules
 const path = require('path');
+var csurf = require('csurf')
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 // session store ile sequelize'ı initalize edin
@@ -42,6 +43,7 @@ app.use(
   })
 )
 app.use(locals);
+app.use(csurf()); // session ve cookiden sonra bunu tanımlamamız gerekiyor.
 // router middlewares
 app.use('/account', authRoutes);
 app.use('/admin', adminRoutes); // bu şekilde öneki koyabiliriz.

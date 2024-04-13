@@ -9,6 +9,7 @@
     <main class="w-9/12 mx-auto flex justify-between gap-5 mb-32">
       <form method="post" class="w-full mx-auto p-3 flex justify-between gap-3"
       enctype="multipart/form-data"
+      action="/admin/blog/create?_csrf=<%= csrfToken %>"
       >
         <section class="px-5 grow flex flex-col gap-8">
           <!-- title => input -->

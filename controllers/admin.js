@@ -289,11 +289,6 @@ exports.getCategoryRemove = async (req, res) => {
   const blogid = req.body.blogid;
   const categoryid = req.body.categoryid;
   const blog = await Blog.findByPk(blogid);
-
-  console.log(blogid);
-  console.log(categoryid);
-  console.log(blog);
-  console.log('Çalıştı');
   await blog.removeCategories(categoryid);
   res.redirect(`/admin/categories/${categoryid}`);
 }
