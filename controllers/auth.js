@@ -1,4 +1,5 @@
 const User = require('../models').User;
+const Role = require('../models').Role;
 const bcrypt = require('bcrypt');
 const emailService = require('../helpers/send-mail');
 const config = require('../config');
@@ -59,24 +60,21 @@ exports.postLogin = async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     try {
-        const user = await User.findOne({where: {username}, raw: true}); // böyle bir username var mı?
+        const user = await User.findOne({where: {username}}); // böyle bir username var mı?
         if(!user) {
             // böyle bir username yok ise
             req.session.message = 'error';
             return res.redirect('/account/login');
         }
-
         // var ise artık parola kontrolü yapabiliriz
         const match = await bcrypt.compare(password, user.password);
         if(match) {
-            // login
-            // cookie en ilkeli ve güvenlik sorunu var fakat başka amaçlar için kullanıyoruz.
-            //? res.cookie('isAuth', true);
-            // session bilgisi => güvenlik sorunu var oluşturulan ID başka bir bilgisayarda kullanıldığında uygulama o ID'yi tanıdığı için o bilgisayara yine izin vericek bu da güvenlik açığı oluşturuyor. Buna cross attack deniyor
+            const userRoles = await user.getRoles({attributes: ['rolename'], raw: true});
+            req.session.roles = userRoles.map((role) => role.rolename); // ['moderator', 'admin']
+            req.session.userid = user.id;
+
             req.session.isAuth = true;
             req.session.username = username;
-            // session - db tutma => normal de session server ram'inde yani geçici belleğinde tutuluyor. çok fazla istek olduğunda performans kaybı veya sunucu yeniden başlatıldığında bu verilerin kaybolmasına neden olur. En sağlıklısı database'de bunları tutmak.
-            // token-based auth kavramı - api bölümü
             const url = returnUrl ?? '/';
             return res.redirect(url);
         }

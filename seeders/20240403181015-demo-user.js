@@ -4,17 +4,38 @@ const bcrypt = require('bcrypt');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    return queryInterface.bulkInsert('Users', [
+    return queryInterface.bulkInsert('users', [
       { 
-        username: 'admin',
+        username: 'ismail',
         email: 'hamdismailkskn98@gmail.com', 
-        password: await bcrypt.hash('4856', 10),
+        password: await bcrypt.hash('456128', 10),
         createdAt: new Date(),
         updatedAt: new Date()
       },
       { 
-        username: 'ismailkskn', 
-        email: 'ismailkeskin98@gmail.com', 
+        username: 'ibrahim', 
+        email: 'ibrahim@gmail.com', 
+        password: await bcrypt.hash('456128', 10),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      { 
+        username: 'muhammed', 
+        email: 'muhammed@gmail.com', 
+        password: await bcrypt.hash('456128', 10),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      { 
+        username: 'sengul', 
+        email: 'sengul@gmail.com', 
+        password: await bcrypt.hash('456128', 10),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      { 
+        username: 'adem', 
+        email: 'sengul@gmail.com', 
         password: await bcrypt.hash('456128', 10),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -23,6 +44,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('Users', null, {});
+    return queryInterface.bulkDelete('users', null, {});
   }
 };

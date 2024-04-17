@@ -5,16 +5,16 @@
   </head>
   <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
     <%- include('../../partials/navbar.ejs') %>
-    <h1 class="w-full flex justify-center items center mb-10 font-semibold text-3xl">Kategori Ekle</h1>
+    <h1 class="w-full flex justify-center items center mb-10 font-semibold text-3xl">Role Ekle</h1>
     <main class="w-9/12 mx-auto flex justify-between gap-5">
       <form method="post" class="w-7/12 mx-auto px-5 py-4 flex flex-col gap-8">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <input type="hidden" name="id" value="<%= category.id %>">
+        <input type="hidden" name="id" value="<%= role.id %>">
         <!-- name => input -->
         <section class="flex items-center gap-3">
           <label for="name" class="basis-1/4 text-lg text-white font-semibold">İsim</label>
           <div class="basis-3/4">
-            <input type="text" id="name" name="name" value="<%= category.name %>" class="border border-gray-300 w-full rounded py-2 px-3 outline-none bg-gray-100/20 text-white" />
+            <input type="text" name="rolename" value="<%= role.rolename %>" class="border border-gray-300 w-full rounded py-2 px-3 outline-none bg-gray-100/20 text-white" />
           </div>
         </section>
         <!-- submit => button -->
@@ -29,30 +29,30 @@
         <thead>
           <tr class="uppercase text-lg text-gray-700 font-bold grid grid-cols-[60px_180px_1fr_230px]">
             <th>ıd</th>
-            <th>resim</th>
-            <th>baslik</th>
+            <th>username</th>
+            <th>email</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <% blogs.forEach(({dataValues}) => { %>
+          <% users.forEach((user) => { %>
           <tr class="border-b border-gray-200 odd:bg-gray-100/30 rounded grid grid-cols-[60px_180px_1fr_230px]">
-            <td class="py-3 px-4 flex items-center">#<%= dataValues.id %></td>
+            <td class="py-3 px-4 flex items-center">#<%= user.id %></td>
             <td class="py-3 px-4 flex items-center">
-              <img src="/static/images/<%= dataValues.image %>" alt="<%= dataValues.title %>" class="w-[168px] h-[94px] object-cover" />
+              <%= user.username %>
             </td>
-            <td class="py-3 px-4 flex items-center"><%= dataValues.title %></td>
+            <td class="py-3 px-4 flex items-center"><%= user.email %></td>
             <td class="py-3 px-4 flex items-center">
               <a
-                href="/admin/blogs/<%= dataValues.id %>"
+                href="/admin/users/<%= user.id %>"
                 class="rounded bg-yellow-500 text-white px-3 py-2 text-sm hover:bg-yellow-700 transition-all mr-3"
                 >Edit</a
               >
-              <form class="inline-block" action="/admin/categories/remove" method="post">
+              <form class="inline-block" action="/admin/roles/remove" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <input type="hidden" name="blogid" value="<%= dataValues.id %>">
-                <input type="hidden" name="categoryid" value="<%= category.id %>">
-                <button type="submit" class="rounded bg-red-500 text-white px-3 py-2 text-sm font-semibold hover:bg-red-700 transition-all">Kategoriden Çıkar</button>
+                <input type="hidden" name="roleId" value="<%= role.id %>">
+                <input type="hidden" name="userId" value="<%= user.id %>">
+                <button type="submit" class="rounded bg-red-500 text-white px-3 py-2 text-sm font-semibold hover:bg-red-700 transition-all">Yetkilendirmeyi Kaldır</button>
               </form>
             </td>
           </tr>

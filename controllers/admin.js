@@ -1,10 +1,17 @@
 const fs = require('fs');
 const Blog = require('../models').Blog;
 const Category = require('../models').Category;
+const Role = require('../models').Role;
+const User = require('../models').User;
 const slugField = require('../helpers/slugfield');
+const { Sequelize } = require('../models');
+const { where } = require('sequelize');
 
 //! admin blog
 exports.getBlogList = async (req, res) => {
+  const userid = req.session.userid;
+  const isModerator = req.session.roles.includes('moderator'); // true or false
+  const isAdmin = req.session.roles.includes('admin'); // true or false
   try {
     const blogs = await Blog.findAll({
       attributes: ['id', 'title', 'image'],
@@ -12,6 +19,7 @@ exports.getBlogList = async (req, res) => {
         model: Category,
         attributes: ['name'],
       }],
+      where: !isAdmin && isModerator ? {userId: userid} : null, // admin ise false olur ve tüm bloglar gelir aksi durumda, login olan kişi moderatordür onun blogları getirilir
     });
     res.render('admin/blog/blog-list', {
       title: 'Blog List',
@@ -47,12 +55,11 @@ exports.postBlogCreate = async (req, res) => {
   const image = req.file.filename;
   const isHome = req.body.isHome == 'on' ? 1 : 0;
   const isActive = req.body.isActive == 'on' ? 1 : 0;
+  const userId = req.session.userid;
   const categoryIds = req.body.categories; // undefined or array
-  console.log(categoryIds);
   try {
-    const newBlog = await Blog.create({ title, url, subTitle, description, image, isActive, isHome });
+    const newBlog = await Blog.create({ title, url, subTitle, description, image, isActive, isHome, userId });
     if (categoryIds !== undefined && categoryIds.length > 0) {
-      console.log(newBlog);
       await newBlog.addCategories(categoryIds);
     }
     res.redirect('/admin/blogs?action=create');
@@ -64,23 +71,26 @@ exports.postBlogCreate = async (req, res) => {
 // admin blog edit
 exports.getBlogEdit = async (req, res) => {
   const id = req.params.id;
+  const userId = req.session.userid;
   try {
     const categories = await Category.findAll({ raw: true });
-    const {dataValues} = await Blog.findOne({
+    const blog = await Blog.findOne({
       where: {
-        id: id
+        id: id,
+        userId
       },
       include: [{
         model: Category,
         attributes: ['id'],
       }],
+      raw: true,
     });
     console.log(dataValues);
     if (dataValues) {
       return res.render('admin/blog/blog-edit', {
         title: 'Blog Edit',
         categories,
-        blog: dataValues,
+        blog,
       });
     }
     res.redirect('/admin/blogs');
@@ -95,6 +105,7 @@ exports.postBlogEdit = async (req, res) => {
   const url = slugField(title);
   const subTitle = req.body.subTitle;
   const description = req.body.description;
+  const userId = req.session.userid;
   let image = req.body.image;
   if (req.file) {
     image = req.file.filename;
@@ -109,7 +120,8 @@ exports.postBlogEdit = async (req, res) => {
   try {
     const blog = await Blog.findOne({
       where: {
-        id: id
+        id: id,
+        userId
       },
       include: {
         model: Category,
@@ -141,8 +153,12 @@ exports.postBlogEdit = async (req, res) => {
 // admin blog Delete
 exports.getBlogDelete = async (req, res) => {
   const id = req.params.id;
+  const userId = req.session.userid;
   try {
-    const blog = await Blog.findByPk(id, { raw: true });
+    const blog = await Blog.findOne({
+      where: { id, userId },
+      raw: true
+    });
     if (blog) {
       return res.render('admin/blog/blog-delete', {
         title: `Blog Delete - ${blog.id}`,
@@ -156,20 +172,20 @@ exports.getBlogDelete = async (req, res) => {
 };
 exports.postBlogDelete = async (req, res) => {
   const id = req.body.id;
+  const userId = req.session.userid;
   try {
-    const blog = await Blog.findByPk(id, {
+    const blog = await Blog.findOne({
+      where: { id, userId },
       include: [{
         model: Category,
         attributes: ['id']
       }],
-    });
-
+});
     // Kategorilerin kimliklerini alıp diziye toplama
     const categoriesId = blog.Categories.map(category => category.id);
     // Kategorileri kaldırma ve blogu silme
     await blog.removeCategories(categoriesId);
     await Blog.destroy({ where: { id } });
-
     res.redirect('/admin/blogs?action=delete');
   } catch (error) {
     console.log(error);
@@ -241,7 +257,6 @@ exports.postCategoryEdit = async (req, res) => {
   const name = req.body.name;
   try {
     const category = await Category.findByPk(id);
-    console.log(category);
     if (category) {
       category.name = name;
       await category.save();
@@ -291,4 +306,132 @@ exports.getCategoryRemove = async (req, res) => {
   const blog = await Blog.findByPk(blogid);
   await blog.removeCategories(categoryid);
   res.redirect(`/admin/categories/${categoryid}`);
+}
+
+//! admin roles
+exports.getRoleList = async (req, res) => {
+  try {
+    const roles = await Role.findAll({
+      attributes: {
+        include: ['role.id', 'role.rolename', [Sequelize.fn('COUNT', Sequelize.col('users.id')), 'user_count']],
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id'],
+        }
+      ],
+      group: ['role.id'],
+      includeIgnoreAttributes: false, 
+      raw: true,
+    });
+    if(roles) {
+      return res.render('admin/role/role-list', {
+        title: 'Yetkiler',
+        roles
+      })
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+exports.getRoleEdit = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const role = await Role.findByPk(id);
+    const users = await role.getUsers(); // o role sahip olan kullanıcılar
+    if(role) {
+      return res.render('admin/role/role-edit', {
+        title: `${role.rolename} Yetkilendirme`,
+        role,
+        users,
+      })
+    }
+    res.redirect('/admin/roles'); // eğer role bulunmaz ise
+  } catch (error) {
+    console.log(error);
+  }
+}
+exports.postRoleEdit = async (req, res) => {
+  const {id, rolename} = req.body;
+
+  try {
+    await Role.update({rolename}, {where: {id} });
+    res.redirect('/admin/roles');
+  } catch (error) {
+    console.log(error);
+  }
+}
+exports.rolesRemove = async (req, res) => {
+  const { roleId, userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    await user.removeRole(roleId);
+    res.redirect(`/admin/roles/${roleId}`);
+  } catch (error) {
+    console.log(error);
+  }
+
+}
+
+//! admin users
+exports.getUserList = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'username', 'email'],
+      include: [
+        {
+          model: Role,
+          attributes: ['rolename']
+        }
+      ]
+    });
+    res.render('admin/user/user-list', {
+      title: 'User List',
+      users
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+exports.getUserEdit = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findOne({
+      where: {id},
+      include: [{model: Role, attributes: ['id']}],
+    });
+    const roles = await Role.findAll({raw: true});
+    if(user) {
+      return res.render('admin/user/user-edit', {
+        title: `${user.username} edit`,
+        user,
+        roles
+      });
+    }
+    res.redirect('/admin/users');
+  } catch (error) {
+    console.log(error);
+  }
+}
+exports.postUserEdit = async (req, res) => {
+  const { id, username, email, roles } = req.body;
+  try {
+      const user = await User.findOne({
+      where: {id},
+      include: [{model: Role, attributes: ['id']}],
+    });
+    if(user) {
+      await User.update({username, email}, {where: {id}});
+      if(roles) {
+        await user.setRoles(roles);
+      } else {
+        await user.removeRoles(user.Roles);
+      }
+    }
+    res.redirect('/admin/users');
+  } catch (error) {
+    console.log(error);    
+  }
 }

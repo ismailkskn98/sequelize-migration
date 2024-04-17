@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <%- include('../../partials/head.ejs') %>
+  </head>
+  <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <%- include('../../partials/navbar.ejs') %>
+    <h1 class="w-full flex justify-center items center mb-10 font-semibold text-3xl">User Edit</h1>
+    <main class="w-9/12 mx-auto flex justify-between gap-5">
+      <form method="post" class="w-7/12 mx-auto px-5 py-4 flex flex-col gap-8">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="id" value="<%= user.id %>">
+        <!-- name => input -->
+        <article class="flex items-center gap-3">
+          <label for="name" class="basis-1/4 text-lg text-white font-semibold">Username</label>
+          <div class="basis-3/4">
+            <input type="text" name="username" value="<%= user.username %>" class="border border-gray-300 w-full rounded py-2 px-3 outline-none bg-gray-100/20 text-white" />
+          </div>
+        </article>
+        <!-- email => input -->
+        <article class="flex items-center gap-3">
+          <label for="name" class="basis-1/4 text-lg text-white font-semibold">Email</label>
+          <div class="basis-3/4">
+            <input type="text" name="email" value="<%= user.email %>" class="border border-gray-300 w-full rounded py-2 px-3 outline-none bg-gray-100/20 text-white" />
+          </div>
+        </article>
+        <!-- Roles => checkbox -->
+        <article class="flex items-center">
+          <label for="name" class="basis-1/4 text-lg text-white font-semibold">Roles</label>
+          <div class="basis-3/4 flex flex-col">
+            <% roles.forEach((role) => { %>
+              <div class="flex items-center gap-3 ml-2">
+                <input type="checkbox" id="<%= role.rolename %>" 
+                  class=" rounded outline-none"
+                  name="roles[]"
+                  value="<%= role.id %>"
+                  <%= user.Roles.some((r) => r.id == role.id) ? 'checked' : '' %>
+                />
+                  <label for="<%= role.rolename %>" class="basis-full text-lg text-white font-semibold"><%= role.rolename %></label>
+              </div>
+            <% }) %>
+          </div>
+          </article>
+          <!-- submit => button -->
+        <article class="flex items-center justify-center gap-3 mt-5">
+            <button type="submit" class="rounded cursor-pointer px-8 py-3 font-semibold bg-gray-800 text-white">Kaydet</button>
+          </div>
+        </article>
+      </form>
+    </main>
+   
+  </body>
+</html>

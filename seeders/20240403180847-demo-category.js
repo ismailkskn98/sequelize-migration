@@ -4,7 +4,7 @@ const slugField = require('../helpers/slugfield');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
  async up (queryInterface, Sequelize) {
-    return queryInterface.bulkInsert('Categories', [
+    return queryInterface.bulkInsert('categories', [
       { 
         name: 'Web Geliştirme',
         url: slugField('Web Geliştirme'),
@@ -24,6 +24,6 @@ module.exports = {
     ])
   },
   async down (queryInterface, Sequelize) {
-   return queryInterface.bulkDelete('Categories', null, {});
+   return queryInterface.bulkDelete('categories', null, {});
   }
 };

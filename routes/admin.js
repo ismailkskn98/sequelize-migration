@@ -38,4 +38,17 @@ router.post('/categories/:id', isAuth, adminController.postCategoryEdit);
 router.get('/category/delete/:id', isAuth, csrfToken, adminController.getCategoryDelete);
 router.post('/category/delete/:id', isAuth, adminController.postCategoryDelete);
 
+//! Admin Roles
+router.get('/roles', isAuth, adminController.getRoleList);
+router.get('/roles/:id', isAuth, csrfToken, adminController.getRoleEdit);
+router.post('/roles/remove', isAuth, adminController.rolesRemove);
+router.post('/roles/:id', isAuth, adminController.postRoleEdit);
+
+//! Admin Users
+router.get('/users', isAuth, adminController.getUserList);
+router.get('/users/:id', isAuth, csrfToken, adminController.getUserEdit);
+router.post('/users/:id', isAuth, adminController.postUserEdit);
+
+
+
 module.exports = router;
