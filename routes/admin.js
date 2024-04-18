@@ -4,6 +4,7 @@ const adminController = require('../controllers/admin');
 const imageUpload = require('../helpers/image-upload');
 const isAuth = require('../middlewares/auth');
 const csrfToken = require('../middlewares/csrfToken');
+const isAdmin = require('../middlewares/is-admin');
 
 //! Admin Blogs
 // blog
@@ -23,31 +24,31 @@ router.post('/blog/delete/:id', isAuth, adminController.postBlogDelete);
 
 //! Admin Categories
 // category
-router.get('/categories', isAuth, adminController.getCategoryList);
+router.get('/categories', isAuth, isAdmin, adminController.getCategoryList);
 
 // category create
-router.get('/category/create', isAuth, csrfToken, adminController.getCategoryCreate);
-router.post('/category/create', isAuth, adminController.postCategoryCreate);
+router.get('/category/create', isAuth, isAdmin, csrfToken, adminController.getCategoryCreate);
+router.post('/category/create', isAuth, isAdmin, adminController.postCategoryCreate);
 
-router.post('/categories/remove', isAuth, csrfToken, adminController.getCategoryRemove);
+router.post('/categories/remove', isAuth, isAdmin, csrfToken, adminController.getCategoryRemove);
 
 // category edit
-router.get('/categories/:id', isAuth, csrfToken, adminController.getCategoryEdit);
-router.post('/categories/:id', isAuth, adminController.postCategoryEdit);
+router.get('/categories/:id', isAuth, isAdmin, csrfToken, adminController.getCategoryEdit);
+router.post('/categories/:id', isAuth, isAdmin, adminController.postCategoryEdit);
 // category Delete
-router.get('/category/delete/:id', isAuth, csrfToken, adminController.getCategoryDelete);
-router.post('/category/delete/:id', isAuth, adminController.postCategoryDelete);
+router.get('/category/delete/:id', isAuth, isAdmin, csrfToken, adminController.getCategoryDelete);
+router.post('/category/delete/:id', isAuth, isAdmin, adminController.postCategoryDelete);
 
 //! Admin Roles
-router.get('/roles', isAuth, adminController.getRoleList);
-router.get('/roles/:id', isAuth, csrfToken, adminController.getRoleEdit);
-router.post('/roles/remove', isAuth, adminController.rolesRemove);
-router.post('/roles/:id', isAuth, adminController.postRoleEdit);
+router.get('/roles', isAuth, isAdmin, adminController.getRoleList);
+router.get('/roles/:id', isAuth, isAdmin, csrfToken, adminController.getRoleEdit);
+router.post('/roles/remove', isAuth, isAdmin, adminController.rolesRemove);
+router.post('/roles/:id', isAuth, isAdmin, adminController.postRoleEdit);
 
 //! Admin Users
-router.get('/users', isAuth, adminController.getUserList);
-router.get('/users/:id', isAuth, csrfToken, adminController.getUserEdit);
-router.post('/users/:id', isAuth, adminController.postUserEdit);
+router.get('/users', isAuth, isAdmin, adminController.getUserList);
+router.get('/users/:id', isAuth, isAdmin, csrfToken, adminController.getUserEdit);
+router.post('/users/:id', isAuth, isAdmin, adminController.postUserEdit);
 
 
 

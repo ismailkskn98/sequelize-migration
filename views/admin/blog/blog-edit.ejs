@@ -72,7 +72,7 @@
             <article class="flex flex-col gap-1 border-t border-gray-100/50 pt-4">
               <% categories.forEach((category) => { %>
                 <div class="flex items-center gap-3">
-                  <input type="checkbox" name="categories[]" value="<%= category.id %>" id="category_<%= category.id %>" class="w-4 h-4 outline-none" <%= blog.Categories.some((dataValues) => dataValues.id == category.id) ? 'checked' : '' %> />
+                  <input type="checkbox" name="categories[]" value="<%= category.id %>" id="category_<%= category.id %>" class="w-4 h-4 outline-none" <%= blog.Categories.some(item => item.id == category.id) ? 'checked' : '' %> />
                   <label for="category_<%= category.id %>" class="text-white"><%= category.name %></label>
                 </div>
               <% }) %>

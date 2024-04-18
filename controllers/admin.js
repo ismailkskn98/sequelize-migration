@@ -72,21 +72,17 @@ exports.postBlogCreate = async (req, res) => {
 exports.getBlogEdit = async (req, res) => {
   const id = req.params.id;
   const userId = req.session.userid;
+  const isAdmin = req.session.roles.includes('admin');
   try {
     const categories = await Category.findAll({ raw: true });
     const blog = await Blog.findOne({
-      where: {
-        id: id,
-        userId
-      },
+      where: isAdmin ? { id } : { id: id, userId },
       include: [{
         model: Category,
         attributes: ['id'],
       }],
-      raw: true,
     });
-    console.log(dataValues);
-    if (dataValues) {
+    if (blog) {
       return res.render('admin/blog/blog-edit', {
         title: 'Blog Edit',
         categories,
@@ -154,9 +150,11 @@ exports.postBlogEdit = async (req, res) => {
 exports.getBlogDelete = async (req, res) => {
   const id = req.params.id;
   const userId = req.session.userid;
+  const isAdmin = req.session.roles.includes('admin');
+      
   try {
     const blog = await Blog.findOne({
-      where: { id, userId },
+      where: isAdmin ? { id } : { id: id, userId },
       raw: true
     });
     if (blog) {
